@@ -19,14 +19,16 @@ class BlogController extends Controller
     }
     //
     public function getBlog(Response $response){
-        $blog = Blog::all()->toArray();
-        return response()->json($blog);
+        $blogs = Blog::all()->toArray();
+        foreach($blogs as $key=>$value){
+            $blogs[$key]["blogs"] = json_decode($blogs[$key]["blogs"],true);
+        }
+        return response()->json($blogs);
     }
 
     public function uploadImage(Request $request){
         $file = $request->file("image");
         $name = $file->hashName();
-        Storage::put("public",$file);
         return response()->json([
             "success"=>1,
                 "file"=>[
