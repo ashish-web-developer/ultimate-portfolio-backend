@@ -29,6 +29,7 @@ class BlogController extends Controller
     public function uploadImage(Request $request){
         $file = $request->file("image");
         $name = $file->hashName();
+        Storage::put("public",$file);
         return response()->json([
             "success"=>1,
                 "file"=>[
