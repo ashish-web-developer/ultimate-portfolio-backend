@@ -6,16 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Models\Blog;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Storage;
 
 class BlogController extends Controller
 {
 
     public function AddBlog(Request $request, Response $response){
-        $blog = new Blog();
-        $blog->blogs = json_encode($request->collect());
-        $blog->save();
-        return response()->json(["message"=>"blog have got created successfully"]);
+        $Validated = $request->validate([
+            "title"=>"required",
+            "data"=>"required",
+            "status"=>"required",
+            "featured_image"=>"required"
+        ]);
+        if($Validated){
+            $blog = new Blog();
+            $blog->blogs = json_encode(collect($request->data));
+            $blog->title=$request->title;
+            $blog->status=$request->status;
+            $blog["featured image"] = $request->featured_image;
+            $blog->save();
+            return response()->json(["message"=>"blog have got created successfully"]);
+        }
+        return response()->json(["message",["param is missing"]],Response::HTTP_BAD_REQUEST);
     }
     //
     public function getBlog(Response $response){
@@ -36,5 +49,16 @@ class BlogController extends Controller
                     "url"=>"http://localhost:8000/storage/$name"
                 ]
             ]);
+    }
+    public function featuredImageUpload(Request $request){
+        $file = $request->file("image");
+        $name = $file->hashName();
+        Storage::put("public/featured-image",$file);
+        return response()->json([
+            "success"=>1,
+            "file"=>[
+                "url"=>"http://localhost:8000/storage/featured-image/$name"
+            ]
+        ]);
     }
 }
