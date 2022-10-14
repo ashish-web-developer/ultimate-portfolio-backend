@@ -23,6 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::post("/blog",[BlogController::class,"addBlog"]);
-Route::get("/blog",[BlogController::class,"getBlog"]);
+Route::post("/get-blog",[BlogController::class,"getBlog"]);
 Route::post("/upload",[BlogController::class,"uploadImage"]);
-Route::Post("/featured-image",[BlogController::class,"featuredImageUpload"]);
+Route::post("/featured-image",[BlogController::class,"featuredImageUpload"]);

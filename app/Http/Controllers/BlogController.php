@@ -31,7 +31,13 @@ class BlogController extends Controller
         return response()->json(["message",["param is missing"]],Response::HTTP_BAD_REQUEST);
     }
     //
-    public function getBlog(Response $response){
+    public function getBlog(Request $request, Response $response){
+        if($request->id){
+            $blog = Blog::find($request->id);
+            $blog["blogs"]=json_decode($blog["blogs"],true);
+            return response()->json($blog);
+
+        }
         $blogs = Blog::all()->toArray();
         foreach($blogs as $key=>$value){
             $blogs[$key]["blogs"] = json_decode($blogs[$key]["blogs"],true);
