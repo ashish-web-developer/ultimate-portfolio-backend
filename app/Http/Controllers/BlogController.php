@@ -20,13 +20,25 @@ class BlogController extends Controller
             "featured_image"=>"required"
         ]);
         if($Validated){
-            $blog = new Blog();
-            $blog->blogs = json_encode(collect($request->data));
-            $blog->title=$request->title;
-            $blog->status=$request->status;
-            $blog["featured image"] = $request->featured_image;
-            $blog->save();
-            return response()->json(["message"=>"blog have got created successfully"]);
+            if($request->id){
+                $blog = Blog::find($request->id);
+                Log::info($blog);
+                $blog->blogs = json_encode(collect($request->data));
+                $blog->title=$request->title;
+                $blog->status=$request->status;
+                $blog["featured image"] = $request->featured_image;
+                $blog->save();
+                return response()->json(["message"=>"blog got updated successfully"]);
+
+            }else{
+                $blog = new Blog();
+                $blog->blogs = json_encode(collect($request->data));
+                $blog->title=$request->title;
+                $blog->status=$request->status;
+                $blog["featured image"] = $request->featured_image;
+                $blog->save();
+                return response()->json(["message"=>"blog have got created successfully"]);
+            }
         }
         return response()->json(["message",["param is missing"]],Response::HTTP_BAD_REQUEST);
     }
