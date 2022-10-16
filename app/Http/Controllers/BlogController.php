@@ -28,7 +28,7 @@ class BlogController extends Controller
                 $blog->status=$request->status;
                 $blog["featured image"] = $request->featured_image;
                 $blog->save();
-                return response()->json(["message"=>"blog got updated successfully"]);
+                return response()->json(["message"=>"Blog have got updated successfully"]);
 
             }else{
                 $blog = new Blog();
@@ -37,7 +37,7 @@ class BlogController extends Controller
                 $blog->status=$request->status;
                 $blog["featured image"] = $request->featured_image;
                 $blog->save();
-                return response()->json(["message"=>"blog have got created successfully"]);
+                return response()->json(["message"=>"Blog have got created successfully"]);
             }
         }
         return response()->json(["message",["param is missing"]],Response::HTTP_BAD_REQUEST);
