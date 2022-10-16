@@ -52,7 +52,7 @@ class BlogController extends Controller
         return response()->json([
             "success"=>1,
                 "file"=>[
-                    "url"=>"http://localhost:8000/storage/$name"
+                    "url"=> env("APP_ENV")=="prod"?"http://ultimate-portfolio.in/storage/$name":"http://localhost:8000/storage/$name"
                 ]
             ]);
     }
@@ -63,7 +63,7 @@ class BlogController extends Controller
         return response()->json([
             "success"=>1,
             "file"=>[
-                "url"=>"http://localhost:8000/storage/featured-image/$name"
+                "url"=>env("APP_ENV")=="prod"?"http://ultimate-portfolio.in/storage/featured-image/$name":"http://localhost:8000/storage/featured-image/$name"
             ]
         ]);
     }
