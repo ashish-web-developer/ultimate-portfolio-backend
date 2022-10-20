@@ -61,10 +61,12 @@ class BlogController extends Controller
         $file = $request->file("image");
         $name = $file->hashName();
         Storage::put("public",$file);
+        $file_url = asset("/storage/$name");
+        Log::info($file_url);
         return response()->json([
             "success"=>1,
                 "file"=>[
-                    "url"=> env("APP_ENV")=="prod"?"http://ultimate-portfolio.in/storage/$name":"http://localhost:8000/storage/$name"
+                    "url"=>$file_url
                 ]
             ]);
     }
@@ -72,10 +74,12 @@ class BlogController extends Controller
         $file = $request->file("image");
         $name = $file->hashName();
         Storage::put("public/featured-image",$file);
+        $file_url = asset("/storage/featured-image/$name");
+        Log::info($file_url);
         return response()->json([
             "success"=>1,
             "file"=>[
-                "url"=>env("APP_ENV")=="prod"?"http://ultimate-portfolio.in/storage/featured-image/$name":"http://localhost:8000/storage/featured-image/$name"
+                "url"=>$file_url
             ]
         ]);
     }
