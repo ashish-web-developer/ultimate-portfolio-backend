@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
@@ -21,7 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-
+Route::post("/register",[AuthController::class,"createUser"]);
+Route::post("/login",[AuthController::class,"loginUser"]);
 Route::post("/blog",[BlogController::class,"addBlog"]);
 Route::post("/get-blog",[BlogController::class,"getBlog"]);
 Route::post("/upload",[BlogController::class,"uploadImage"]);
