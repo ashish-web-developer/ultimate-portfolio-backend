@@ -19,19 +19,18 @@ use Illuminate\Support\Facades\Log;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    Log::info(Auth::user());
     return $request->user();
 });
 
 
 Route::group(['middleware'=>'auth:api'],function(){
     Route::get("/logout",[UserController::class,"logoutUser"]);
+    Route::post("/blog",[BlogController::class,"addBlog"]);
+    Route::post("/featured-image",[BlogController::class,"featuredImageUpload"]);
 });
 
 
 Route::post("/register",[UserController::class,"createUser"]);
 Route::post("/login",[UserController::class,"loginUser"]);
-Route::post("/blog",[BlogController::class,"addBlog"]);
 Route::post("/get-blog",[BlogController::class,"getBlog"]);
 Route::post("/upload",[BlogController::class,"uploadImage"]);
-Route::post("/featured-image",[BlogController::class,"featuredImageUpload"]);
