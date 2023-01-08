@@ -62,8 +62,8 @@ class BlogController extends Controller
     }
     //
     public function getBlog(Request $request, Response $response){
-        if($request->id){
-            $blog = Blog::find($request->id);
+        if($request->slug){
+            $blog = Blog::where("slug",$request->slug)->first();
             $blog["blogs"]=json_decode($blog["blogs"],true);
             return response()->json($blog);
 
