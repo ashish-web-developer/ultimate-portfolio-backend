@@ -10,6 +10,7 @@ use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
@@ -43,6 +44,7 @@ class BlogController extends Controller
                 $blog["featured image"] = $request->featured_image;
                 $blog["user"] = $user["name"];
                 $blog["email"] = $user["email"];
+                $blog["slug"] = Str::slug($request->title,"-");
                 $blog->save();
                 return response()->json([
                     "success"=>true,
@@ -60,8 +62,8 @@ class BlogController extends Controller
     }
     //
     public function getBlog(Request $request, Response $response){
-        if($request->id){
-            $blog = Blog::find($request->id);
+        if($request->slug){
+            $blog = Blog::where("slug",$request->slug)->first();
             $blog["blogs"]=json_decode($blog["blogs"],true);
             return response()->json($blog);
 
@@ -87,7 +89,6 @@ class BlogController extends Controller
             ]);
     }
     public function featuredImageUpload(Request $request){
-        Log::info(Auth::user());
         $validateFile = Validator::make($request->all(),[
             "image"=> "required|image|mimes:jpeg,png,jpg"
         ]);
