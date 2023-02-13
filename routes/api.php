@@ -34,3 +34,6 @@ Route::post("/register",[UserController::class,"createUser"]);
 Route::post("/login",[UserController::class,"loginUser"]);
 Route::post("/get-blog",[BlogController::class,"getBlog"]);
 Route::post("/upload",[BlogController::class,"uploadImage"]);
+Route::get("/abc",function(){
+    return "random";
+});
