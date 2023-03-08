@@ -20,7 +20,8 @@ class BlogController extends Controller
             "title"=>"required|string",
             "data"=>"required",
             "status"=>"required|boolean",
-            "featured_image"=>"required|string"
+            "featured_image"=>"required|string",
+            "meta_description"=>"required|string"
         ]);
         if($Validated){
             if($request->id){
@@ -29,6 +30,7 @@ class BlogController extends Controller
                 $blog->blogs = json_encode(collect($request->data));
                 $blog->title = $request->title;
                 $blog->status = $request->status;
+                $blog->meta_description = $request->meta_description;
                 $blog["featured image"] = $request->featured_image;
                 $blog["user"] = $request->user->name;
                 $blog["email"] = $request->user->email;
@@ -41,6 +43,7 @@ class BlogController extends Controller
                 $blog->blogs = json_encode(collect($request->data));
                 $blog->title=$request->title;
                 $blog->status=$request->status;
+                $blog->meta_description = $request->meta_description;
                 $blog["featured image"] = $request->featured_image;
                 $blog["user"] = $user["name"];
                 $blog["email"] = $user["email"];
