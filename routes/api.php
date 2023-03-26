@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -27,6 +28,10 @@ Route::group(['middleware'=>'auth:api'],function(){
     Route::get("/logout",[UserController::class,"logoutUser"]);
     Route::post("/blog",[BlogController::class,"addBlog"]);
     Route::post("/featured-image",[BlogController::class,"featuredImageUpload"]);
+    Route::prefix("comment")->group(function(){
+        Route::get('', [CommentController::class, 'index']);
+        Route::post('create', [CommentController::class, 'store']);
+    });
 });
 
 
