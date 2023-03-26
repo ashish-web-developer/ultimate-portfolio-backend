@@ -66,7 +66,7 @@ class BlogController extends Controller
     //
     public function getBlog(Request $request, Response $response){
         if($request->slug){
-            $blog = Blog::where("slug",$request->slug)->first();
+            $blog = Blog::with("comments.user")->where("slug",$request->slug)->first();
             $blog["blogs"]=json_decode($blog["blogs"],true);
             return response()->json($blog);
 
