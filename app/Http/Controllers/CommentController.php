@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use App\Models\Like;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -118,6 +119,29 @@ class CommentController extends Controller
         return response()->json([
             "success"=>false,
             "message"=>"Successfully Deleted",
+        ]);
+    }
+    public function upvote(Request $request)
+    {
+        $validateLike = Validator::make($request->all(),[
+            "blog_id"=>"required",
+            "comment_id"=>"required"
+        ]);
+        if($validateLike->fails()){
+            return response()->json([
+                "success"=>false,
+                "message"=>"failed",
+                "error"=>$validateLike->errors()
+            ]);
+        }
+        Like::create([
+            "user_id"=>$request->user->id,
+            "blog_id"=>$request->blog->id,
+            "comment_id"=>$request->comment_id
+        ]);
+        return response()->json([
+            "success"=>true,
+            "message"=>"Liked Successfully",
         ]);
     }
 }
