@@ -31,6 +31,8 @@ Route::group(['middleware'=>'auth:api'],function(){
     Route::prefix("comment")->group(function(){
         Route::get('', [CommentController::class, 'index']);
         Route::post('create', [CommentController::class, 'store']);
+        Route::post("upvote",[CommentController::class, 'upvote']);
+        Route::post("downvote",[CommentController::class, 'downvote']);
     });
 });
 

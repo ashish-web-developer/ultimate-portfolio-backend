@@ -134,14 +134,45 @@ class CommentController extends Controller
                 "error"=>$validateLike->errors()
             ]);
         }
-        Like::create([
-            "user_id"=>$request->user->id,
-            "blog_id"=>$request->blog->id,
-            "comment_id"=>$request->comment_id
+        $like = Like::firstOrCreate([
+            "user_id"=>$request->user()->id,
+            "blog_id"=>$request->blog_id,
+            "comment_id"=>$request->comment_id,
         ]);
+        $like->like = 1;
+        $like->save();
+        $comment = Comment::where("blog_id",$request->blog_id)->where("id",$request->comment_id)->with("user","like")->first();
         return response()->json([
             "success"=>true,
             "message"=>"Liked Successfully",
+            "comment"=>$comment
+        ]);
+    }
+    public function downvote(Request $request)
+    {
+        $validateLike = Validator::make($request->all(),[
+            "blog_id"=>"required",
+            "comment_id"=>"required"
+        ]);
+        if($validateLike->fails()){
+            return response()->json([
+                "success"=>false,
+                "message"=>"failed",
+                "error"=>$validateLike->errors()
+            ]);
+        }
+        $like = Like::firstOrCreate([
+            "user_id"=>$request->user()->id,
+            "blog_id"=>$request->blog_id,
+            "comment_id"=>$request->comment_id,
+        ]);
+        $like->like = 0;
+        $like->save();
+        $comment = Comment::where("blog_id",$request->blog_id)->where("id",$request->comment_id)->with("user","like")->first();
+        return response()->json([
+            "success"=>true,
+            "message"=>"Liked Successfully",
+            "comment"=>$comment
         ]);
     }
 }
