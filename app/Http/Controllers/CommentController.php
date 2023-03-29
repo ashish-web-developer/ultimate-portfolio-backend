@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Comment;
 use App\Models\Like;
+use App\Models\Blog;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -49,6 +50,7 @@ class CommentController extends Controller
             "blog_id"=>$request->blog_id
         ]);
         return response()->json([
+            "comments"=>Comment::with("like","user")->where("blog_id",$request->blog_id)->get(),
             "success"=>true,
             "message"=>"successfully created",
         ]);
