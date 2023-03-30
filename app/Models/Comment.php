@@ -16,6 +16,6 @@ class Comment extends Model
     }
     public function like()
     {
-        return $this->hasOne(Like::class);
+        return $this->hasMany(Like::class);
     }
 }
