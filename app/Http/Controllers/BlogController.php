@@ -24,16 +24,17 @@ class BlogController extends Controller
             "meta_description"=>"required|string"
         ]);
         if($Validated){
-            if($request->id){
-                $blog = Blog::find($request->id);
-                Log::info($blog);
+            if($request->slug){
+                $blog = Blog::where("slug",$request->slug)->first();
+                $user = $request->user()->toArray();
                 $blog->blogs = json_encode(collect($request->data));
-                $blog->title = $request->title;
-                $blog->status = $request->status;
+                $blog->title=$request->title;
+                $blog->status=$request->status;
                 $blog->meta_description = $request->meta_description;
                 $blog["featured image"] = $request->featured_image;
-                $blog["user"] = $request->user->name;
-                $blog["email"] = $request->user->email;
+                $blog["user"] = $user["name"];
+                $blog["email"] = $user["email"];
+                $blog["slug"] = Str::slug($request->title,"-");
                 $blog->save();
                 return response()->json(["message"=>"Blog have got updated successfully"]);
 
