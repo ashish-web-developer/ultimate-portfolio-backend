@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 
 class UserController extends Controller
@@ -33,7 +34,7 @@ class UserController extends Controller
                 "email"=>$request->email,
                 "password"=>Hash::make($request->password)
             ]);
-            $token = $user->createToken("API TOKEN")->accessToken;
+            $token = $user->createToken("API TOKEN")->plainTextToken;
             return response()->json([
                 "status"=>true,
                 "message"=>"User created Successfully",
@@ -51,7 +52,6 @@ class UserController extends Controller
     }
     public function loginUser(Request $request){
         try{
-            $remember = true;
             $validateUser = Validator::make($request->all(),[
                 "email"=>"required|email",
                 "password"=>"required"
@@ -63,22 +63,20 @@ class UserController extends Controller
                     "errors"=>$validateUser->errors()
                 ],401);
             }
-            if(Auth::attempt($request->all(),$remember)){
-                $user = Auth::user();
-                $token = $user->createToken("API TOEKN")->accessToken;
-                Log::info($request);
-                return response()->json([
-                    "status"=>true,
-                    "message"=>"Authenticated",
-                    "user"=>$user,
-                    "token"=>$token
-                ],200);
-            }else{
+            $user = User::where("email",$request->email)->first();
+            if(!$user && !Hash::check($request->password,$user->password)){
                 return response()->json([
                     "status"=>false,
                     "message"=>"Unauthenticated",
                 ],401);
             }
+            $token = $user->createToken("API TOEKN")->plainTextToken;
+            return response()->json([
+                "status"=>true,
+                "message"=>"Authenticated",
+                "user"=>$user,
+                "token"=>$token
+            ],200);
         }
         catch(\Throwable $th){
             return response()->json([
@@ -90,8 +88,7 @@ class UserController extends Controller
     }
     public function logoutUser(Request $request){
         try{
-            $token =  $request->user()->token();
-            $token->revoke();
+            $request->user()->tokens()->delete();
             return response()->json([
                 "success"=>true,
                 "message"=>"User logged out successfully",
@@ -99,7 +96,7 @@ class UserController extends Controller
         } catch(\Throwable $th){
             return response()->json([
                 "success"=>false,
-                "message"=>$th->getMessage()
+                "message"=>$th->getMessage(),
             ],401);
         }
     }
