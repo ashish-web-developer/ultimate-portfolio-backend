@@ -19,12 +19,12 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 
-Route::group(['middleware'=>'auth:api'],function(){
+Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::get("/logout",[UserController::class,"logoutUser"]);
     Route::post("/blog",[BlogController::class,"addBlog"]);
     Route::post("/featured-image",[BlogController::class,"featuredImageUpload"]);
