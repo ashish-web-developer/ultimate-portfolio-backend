@@ -64,7 +64,7 @@ class UserController extends Controller
                 ],401);
             }
             $user = User::where("email",$request->email)->first();
-            if(!$user && !Hash::check($request->password,$user->password)){
+            if($user && !Hash::check($request->password,$user->password)){
                 return response()->json([
                     "status"=>false,
                     "message"=>"Unauthenticated",
